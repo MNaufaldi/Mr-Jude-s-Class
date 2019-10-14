@@ -17,33 +17,29 @@ with open (filename) as t:
     header = next(reader)
     for row in reader:
         if count == 288:
-            if row[0] == 'NA':
-                current_step.append(0)
-                allstep.append(0)
-                date = datetime.strptime(row[1], "%Y-%m-%d")
-                datep.append(date)
-                NAcount +=1
-            else:
+            if row[0] != 'NA':
                 current_step.append(int(row[0]))
                 allstep.append(int(row[0]))
                 date = datetime.strptime(row[1], "%Y-%m-%d")
                 datep.append(date)
             totalstep.append(sum(current_step))
             step.append(current_step)
+                
             
             current_step = []
             count = 0
         else:
             count += 1
-            if row[0] == 'NA':
-                current_step.append(0)
-                allstep.append(0)
-                #date = datetime.strptime(row[1], "%Y-%m-%d")
-            else:
+            if row[0] != 'NA':
                 current_step.append(int(row[0]))
                 allstep.append(int(row[0]))
+           
+                
                 #date = datetime.strptime(row[1], "%Y-%m-%d")
-plt.bar(range(1,61),totalstep)
+plt.hist(totalstep)
+plt.title("Steps per day")
+plt.xlabel("Steps")
+plt.ylabel("Frequencies")
 plt.show()
 print("Median: ",np.median(totalstep))
 print("Mean: ",np.mean(totalstep))
@@ -61,6 +57,7 @@ count = -5
 av = []
 avstep = []
 average = 0
+countday = 0
 with open(filename) as w:
     reader = csv.reader(w)
     header = next(reader)
@@ -95,6 +92,7 @@ with open(filename) as w:
             count = -5
             av.append(average/(2355/5))
             average = 0
+            
 #Im assuming the question A is average / 1 minute for the (x axis)
 #I dont understand the question...
 #And i dont understand why it turned into a bar chart... im sorry
@@ -149,11 +147,14 @@ with open (filename) as t:
                 allstep.append(int(row[0]))
                 NAcount +=1
                 #date = datetime.strptime(row[1], "%Y-%m-%d")
-plt.bar(range(1,61),totalstep)
+plt.hist(totalstep)
+plt.title("Frequencies of Steps")
+plt.xlabel("Steps")
+plt.ylabel("Frequencies")
 plt.show()
 print("Median: ",np.median(totalstep))
 print("Mean: ",np.mean(totalstep))
-print("You have",NAcount,"missing data")
+print("You have",NAcount,"missing data that has been replaced with 0")
 #I replaced the missing data with 0 but it can be modified from the code
 #It could work with a data using a newly added list of data if i tweak the code a little bit
 #%%
@@ -167,6 +168,7 @@ count = -5
 time = 1
 timekeepd,timekeepe = [],[]
 countday = 0
+totalstep = []
 with open (filename) as t:
     reader = csv.reader(t)
     header = next(reader)
@@ -225,13 +227,16 @@ with open (filename) as t:
         
                     
                     
-        if count == 2355:
+        if count == 2355:#Reset per day
             count = -5
             countday += 1
             time +=1
         
 plt.plot(timekeepd,weekday,c='orange',alpha=0.7)
-plt.plot(timekeepe,weekend,c='blue',alpha=0.5)                    
+plt.plot(timekeepe,weekend,c='blue',alpha=0.5) 
+plt.title("Steps per 5 minutes throughout\n the weekdays and weekends")
+plt.xlabel("5 Minute Interval")   
+plt.ylabel("Steps")                
 plt.show()
 
 ##For some reason it turned into bar chart... im sorry i dont understand
