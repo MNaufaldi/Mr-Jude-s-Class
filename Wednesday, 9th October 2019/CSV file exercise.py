@@ -41,7 +41,7 @@ plt.title("Steps per day")
 plt.xlabel("Steps")
 plt.ylabel("Frequencies")
 plt.show()
-print("Median: ",np.median(totalstep))
+print("Median: ",np.median(sorted(totalstep)))
 print("Mean: ",np.mean(totalstep))
 
 #%%
@@ -152,7 +152,7 @@ plt.title("Frequencies of Steps")
 plt.xlabel("Steps")
 plt.ylabel("Frequencies")
 plt.show()
-print("Median: ",np.median(totalstep))
+print("Median: ",np.median(sorted(totalstep)))
 print("Mean: ",np.mean(totalstep))
 print("You have",NAcount,"missing data that has been replaced with 0")
 #I replaced the missing data with 0 but it can be modified from the code
