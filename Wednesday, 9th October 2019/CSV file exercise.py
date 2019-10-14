@@ -45,62 +45,60 @@ print("Median: ",np.median(sorted(totalstep)))
 print("Mean: ",np.mean(totalstep))
 
 #%%
+#Number 2
 #5 Minute pattern
 import csv
 import matplotlib.pyplot as plt
-from datetime import datetime
+import datetime as dt
+import numpy as np
 filename = "activity.csv"
-last_i = 0
-step5 = []
-datep = []
-count = -5
-av = []
-avstep = []
-average = 0
-countday = 0
-with open(filename) as w:
-    reader = csv.reader(w)
+dict = {}
+dictInterval = {}
+dictIntervalWeekends = {}
+dictIntervalWeekdays = {}
+
+with open(filename) as f:
+    reader = csv.reader(f)
     header = next(reader)
     for row in reader:
-        if int(row[2]) - count == 5:
-            if row[0] == 'NA':
-                step5.append(0)
-                datep.append(int(row[2])+(2355*countday))
-                count += 5
+        steps = row[0]
+        if (steps != 'NA'):
+            date = row[1]
+            date2 = int (dt.datetime.strptime(date,"%Y-%m-%d").day)
+            interval = int(row[2])
+            
+            dict.setdefault(str(date),[])
+            dict[str(date)].append(int(steps))
+            
+            dictInterval.setdefault(interval,[])
+            dictInterval[interval].append(int(steps))
+            
+            if (date2 % 7 == 0):
+                dictIntervalWeekends.setdefault(interval,[])
+                dictIntervalWeekends[interval].append(int(steps))
+                
             else:
-                step5.append(int(row[0]))
-                datep.append(int(row[2])+(2355*countday))
-                count += 5
-                average+=(int(row[0]))
-        else:#Interval is more than 5 minute 
-            times = int((int(row[2]) - count)/5)
-            for num in range(times):
-                if row[0] == 'NA':
-                    step5.append(0)
-                    datep.append(int(row[2])+(2355*countday)+(num*5))
-                    count += 5
-                    
-                else:
-                    step5.append(int(int(row[0])/5))
-                    datep.append(int(row[2])+(2355*countday)+(num*5))
-                    count += 5
-                    average+=(int(row[0]))
-        if count == 2355:
-            count = -5
-            av.append(average/(2355/5))
-            average = 0
-            countday += 1
+                dictIntervalWeekdays.setdefault(interval,[])
+                dictIntervalWeekdays[interval].append(int(steps))
             
-#Im assuming the question A is average / 1 minute for the (x axis)
-#I dont understand the question...
-#And i dont understand why it turned into a bar chart... im sorry
+listDate,listTotal,listAve = [],[],[]
             
-plt.plot(datep,step5,c="orange")
-plt.title("Steps in 5 minutes interval")
-plt.xlabel("5 minute interval")
-plt.ylabel("Steps")          
-
+for i in dict.keys():
+    listDate.append(i)
+    listTotal.append(sum(dict.get(i)))
+    listAve.append(np.mean(dict.get(i)))
+averagePlot = []
+averageInterval = []
+for keys in dictInterval.keys():
+    averagePlot.append(np.mean(dictInterval.get(keys)))
+    averageInterval.append(keys)
+plt.plot(averageInterval,averagePlot,c='orange')
+plt.xlabel("Interval")
+plt.ylabel("Average Steps")
+plt.title("Average for each interval")
+plt.show()
 #%%
+#Number 3
 import matplotlib.pyplot as plt
 import csv
 import numpy as np
@@ -158,6 +156,8 @@ print("You have",NAcount,"missing data that has been replaced with 0")
 #I replaced the missing data with 0 but it can be modified from the code
 #It could work with a data using a newly added list of data if i tweak the code a little bit
 #%%
+#Number 4 I have 2 answers
+#Number 4A
 #Activity patterns between weekdays and weekend
 #Started from monday acc to data
 import csv
@@ -240,8 +240,57 @@ plt.ylabel("Steps")
 plt.show()
 
 ##For some reason it turned into bar chart... im sorry i dont understand
+#%%
+#Number 4B using Mr Jude's code
+import csv
+import matplotlib.pyplot as plt
+import datetime as dt
+import numpy as np
+filename = "activity.csv"
+dict = {}
+dictInterval = {}
+dictIntervalWeekends = {}
+dictIntervalWeekdays = {}
 
+with open(filename) as f:
+    reader = csv.reader(f)
+    header = next(reader)
+    for row in reader:
+        steps = row[0]
+        if (steps != 'NA'):
+            date = row[1]
+            date2 = int (dt.datetime.strptime(date,"%Y-%m-%d").day)
+            interval = int(row[2])
+            
+            dict.setdefault(str(date),[])
+            dict[str(date)].append(int(steps))
+            
+            dictInterval.setdefault(interval,[])
+            dictInterval[interval].append(int(steps))
+            
+            if (date2 % 7 == 0) or (date2 % 6 == 0):
+                dictIntervalWeekends.setdefault(interval,[])
+                dictIntervalWeekends[interval].append(int(steps))
+                
+            else:
+                dictIntervalWeekdays.setdefault(interval,[])
+                dictIntervalWeekdays[interval].append(int(steps))
+plotWeekdaysKeys,plotWeekdaysInterval = [],[]    
+plotWeekendsKeys,plotWeekendsInterval = [],[]
 
+for keys in dictIntervalWeekdays.keys():
+    plotWeekdaysKeys.append(keys)
+    plotWeekdaysInterval.append(np.mean(dictIntervalWeekdays.get(keys)))
+    
+for keys in dictIntervalWeekends.keys():
+    plotWeekendsKeys.append(keys)
+    plotWeekendsInterval.append(np.mean(dictIntervalWeekends.get(keys)))
+
+plt.plot(plotWeekdaysKeys,plotWeekdaysInterval,c='blue',label='Weekday')
+plt.plot(plotWeekendsKeys,plotWeekendsInterval,c='orange',label='Weekend')
+plt.xlabel("Interval")
+plt.ylabel("Average Steps")
+plt.legend()
 
 
 
