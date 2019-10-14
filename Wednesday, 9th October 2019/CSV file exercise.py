@@ -65,13 +65,11 @@ with open(filename) as w:
         if int(row[2]) - count == 5:
             if row[0] == 'NA':
                 step5.append(0)
-                date = datetime.strptime(row[1], "%Y-%m-%d")
-                datep.append(date)
+                datep.append(int(row[2])+(2355*countday))
                 count += 5
             else:
                 step5.append(int(row[0]))
-                date = datetime.strptime(row[1], "%Y-%m-%d")
-                datep.append(date)
+                datep.append(int(row[2])+(2355*countday))
                 count += 5
                 average+=(int(row[0]))
         else:#Interval is more than 5 minute 
@@ -79,26 +77,28 @@ with open(filename) as w:
             for num in range(times):
                 if row[0] == 'NA':
                     step5.append(0)
-                    date = datetime.strptime(row[1], "%Y-%m-%d")
+                    datep.append(int(row[2])+(2355*countday)+(num*5))
                     count += 5
-                    datep.append(date)
+                    
                 else:
                     step5.append(int(int(row[0])/5))
-                    date = datetime.strptime(row[1], "%Y-%m-%d")
-                    datep.append(date)
+                    datep.append(int(row[2])+(2355*countday)+(num*5))
                     count += 5
                     average+=(int(row[0]))
         if count == 2355:
             count = -5
             av.append(average/(2355/5))
             average = 0
+            countday += 1
             
 #Im assuming the question A is average / 1 minute for the (x axis)
 #I dont understand the question...
 #And i dont understand why it turned into a bar chart... im sorry
             
-plt.plot(step5,c="orange")
-          
+plt.plot(datep,step5,c="orange")
+plt.title("Steps in 5 minutes interval")
+plt.xlabel("5 minute interval")
+plt.ylabel("Steps")          
 
 #%%
 import matplotlib.pyplot as plt
@@ -129,7 +129,7 @@ with open (filename) as t:
                 allstep.append(int(row[0]))
                 date = datetime.strptime(row[1], "%Y-%m-%d")
                 datep.append(date)
-                NAcount +=1
+                
             totalstep.append(sum(current_step))
             step.append(current_step)
             
@@ -145,7 +145,7 @@ with open (filename) as t:
             else:
                 current_step.append(int(row[0]))
                 allstep.append(int(row[0]))
-                NAcount +=1
+                
                 #date = datetime.strptime(row[1], "%Y-%m-%d")
 plt.hist(totalstep)
 plt.title("Frequencies of Steps")
