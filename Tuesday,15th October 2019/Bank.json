@@ -1,0 +1,33 @@
+{
+    "Banks": {
+        "Bank name": {
+            "Customers username": {
+                "First Name": "First",
+                "Last Name": "Last",
+                "Account": {
+                    "Account Name": "Name",
+                    "Balance": 1004000,
+                    "Password": "Test"
+                }
+            },
+            "notnop": {
+                "First Name": "Not",
+                "Last Name": "Nop",
+                "Account": {
+                    "Account Name": "Name",
+                    "Balance": 1004000,
+                    "Password": "ehe"
+                }
+            },
+            "plswork": {
+                "First Name": "Definitely",
+                "Last Name": "notnop",
+                "Account": {
+                    "Account Name": "Name",
+                    "Balance": 5000,
+                    "Password": "pls"
+                }
+            }
+        }
+    }
+}
