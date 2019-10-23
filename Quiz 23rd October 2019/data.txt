@@ -1,0 +1,6 @@
+ID#Name#Position#Salary
+S0001#Wan#Staff#4500000
+S0002#Tu#Staff#5000000
+S0003#Tri#Manager#10700000
+S0004#For#Officer#8500000
+S0005#plsworkahajoss#Staff#6000000

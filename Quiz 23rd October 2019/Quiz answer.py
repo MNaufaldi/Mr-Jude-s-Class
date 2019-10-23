@@ -11,22 +11,37 @@ d.  Error
 
 #%%
 #Number 2
+from Classes import Staff
+from Classes import Position
 filename = "data.txt"
-dataList = []
-with open(filename) as data:
-    AllData = data.readlines()
-    for data in AllData:
-        dataList.append(data.replace('#',' '))
-        dataDisplay = []
-        dataDisplay.append(data.replace('#',' '))
-        print(dataDisplay)
 
+with open(filename) as file:
+    test = file.readlines()
+StaffList = {}    
+#Setting up existing classes
+for staff in test:
+    try:
+        staff = staff.split('#')
+        staff[3] = staff[3].strip()
+        staff[1] = Staff(staff[0],staff[1],staff[2],staff[3])
+        StaffList[staff[0]] = staff[1]
+    except IndexError:
+        pass
 condition = True
-while condition == True:
-    for data in AllData:
-        print(data.replace("))
-    choice = input("1. New Staff\n2. Delete Staff\n3. View Summary Data\n4. Save & Exit\nInput Choice: ")
-    if choice == '1':
+
+while condition:
+    #Display
+    for staff in StaffList.values():
+        if len(staff.getName()) != 7:
+            print("|{}\t|{}\t|{}{}\t|{}|".format(staff.getID(),staff.getName(),staff.getPosition(),' '*(7-len(staff.getName())),staff.getSalary()))
+        else:
+            print("|{}\t|{}\t|{}\t|{}|".format(staff.getID(),staff.getName(),staff.getPosition(),staff.getSalary()))
+    print("1. New Staff\n2. Delete Staff\n3. View Summary Data\n4. Save and Exit")
+    Choice = input("Input Choice:")
+#--snip snip--#
+#Add new Staff    
+    if Choice == '1':
+        #New Staff
         print("New Staff")
         conditionID = False
         conditionName = False
@@ -35,7 +50,7 @@ while condition == True:
         
         while conditionID == False:
             ID = input("Input ID [SXXXX]:")
-            if len(ID) != 5 or ID[0] != 'S' or (ID[1::].isdigit()) == False or ID in dataList:
+            if len(ID) != 5 or ID[0] != 'S' or (ID[1::].isdigit()) == False or ID in StaffList.keys():
                 condition = False
             else:
                 toAddID = ID
@@ -52,16 +67,16 @@ while condition == True:
             
         
         while conditionPos == False:
-            Position = input("Input Position[Staff|Officer|Manager]:")
-            if Position not in ["Manager","Staff","Officer"]:
+            position = input("Input Position[Staff|Officer|Manager]:")
+            if position not in ["Manager","Staff","Officer"]:
                 pass
             else:
-                toAddPosition = Position
+                toAddPosition = position
                 conditionPos = True
         
         
         while conditionSal == False:
-            Salary = input("Input Salary for {}".format(toAddPosition))
+            Salary = input("Input Salary for {}:".format(toAddPosition))
             if toAddPosition == 'Manager' and int(Salary) > 10000000:
                 toAddSalary = Salary
                 conditionSal = True
@@ -71,45 +86,65 @@ while condition == True:
             elif toAddPosition == 'Officer' and 7000001 < int(Salary) < 10000000:
                 toAddSalary = Salary
                 conditionSal = True
-        AllData.append("{}#{}#{}#{}".format(toAddID,toAddName,toAddPosition,toAddSalary))
-    ###########        
-    elif choice == '2':
+        
+        toAddName = Staff(toAddID,toAddName,toAddPosition,toAddSalary)
+        StaffList[toAddID] = toAddName
+#--snip snip--#
+#Delete Staff
+    elif Choice == '2':
         print("Delete Staff")
         toDeleteID = input("InputID[SXXXX]:")
         
-        for data in dataList:
-            if toDeleteID in data:
-                dataList.remove(data)
+        for IDs in StaffList.keys():
+            if toDeleteID in IDs:
+                del StaffList[toDeleteID]
                 print("Data has been successfully deleted")
                 break
             else:
                 print("Not Found")
-                
-    #################   
-    elif choice == '3':
-        print("1. Staff\nMinimum Salary: 4500000\nMaximum Salary: 5000000\nAverage Salary: 4750000\n")
-        print("2. Officer\nMinimum Salary: 8500000\nMaximum Salary: 8500000\nAverage Salary: 8500000\n")
-        print("3. Manager\nMinimum Salary: 10700000\nMaximum Salary: 10700000\nAverage Salary: 10700000\n ")
+    
+#--snip snip--#
+#Salaries
+    elif Choice == '3':
+         Manager = []
+         Officer = []
+         staff = []
+         for names in StaffList.values():
+            #Check position
+            if names.getPosition() == 'Manager':
+                Manager.append(int(names.getSalary()))
+            elif names.getPosition() == 'Officer':
+                Officer.append(int(names.getSalary()))
+            elif names.getPosition() == 'Staff':
+                staff.append(int(names.getSalary()))
+            #Calculate
+            #Manager
+         print("1. Manager\nMinimum Salary: {}\nMaximum Salary: {}\nAverage Salary: {}".format(
+                min(Manager),
+                max(Manager),
+                sum(Manager)/len(Manager)))
+            #Officer
+         print("1. Manager\nMinimum Salary: {}\nMaximum Salary: {}\nAverage Salary: {}".format(
+                min(Officer),
+                max(Officer),
+                sum(Officer)/len(Officer)))
+            #Staff
+         print("1. Manager\nMinimum Salary: {}\nMaximum Salary: {}\nAverage Salary: {}".format(
+                min(staff),
+                max(staff),
+                sum(staff)/len(staff)))
         
-    elif choice == '4':
+    elif Choice == '4':
         print("Save and Exit")
-        with open(filename) as file:
-            for data in dataList:
-                file.write(data)
+        with open(filename,'w') as file:
+            for IDs in StaffList.keys():
+                ID = StaffList[IDs].getID()
+                Name = StaffList[IDs].getName()
+                position = StaffList[IDs].getPosition()
+                Salary = StaffList[IDs].getSalary()
+                file.write("{}#{}#{}#{}\n".format(ID,Name,position,Salary))
             condition = False
-        
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-
-
+    elif Choice == '5':
+        break
 
 #%%
